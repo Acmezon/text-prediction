@@ -39,9 +39,14 @@ def word_to_number(word):
 		"y": 9,
 		"z": 9};
 
-	word = re.sub(r'\?!#@\$%\^&\*_~-£()\[]\{}\|\'', '', word)
-	word = re.sub(r'[0-9]', '', word)
-	word = word.lower()
+	word = re.sub(r'\?!#@\$%\^&\*_~-£()\[]\{}\|\'', '', word);
+	word = re.sub(r'[0-9]', '', word);
+	word.replace('á', 'a');
+	word.replace('é', 'e');
+	word.replace('í', 'i');
+	word.replace('ó', 'o');
+	word.replace('ú', 'u');
+	word = word.lower();
 
 	for i in range (0, len(word)):
 		character = word[i];
