@@ -1,21 +1,63 @@
 #-*-coding:utf-8-*-
-from pprint import pprint
-from collections import Counter
+import codecs
+import functions
+import json
+import os.path
 import re
 import unicodedata
-import codecs
+from collections import Counter
+from pprint import pprint
+
+def train():
+	s = functions.strip_accents(codecs.open('corpus/corpus_sm.txt', 'r', encoding='utf-8').read().lower());
+	words = re.findall(r'\b[a-z]+\b', s)
+	counter = Counter(words);
+
+	total = sum(counter.values())
+
+	trained = {}
+
+	for pair in counter.items():
+		word = pair[0]
+		number = functions.word_to_number(word)
+		freq = pair[1] / total
+
+		if(number in trained):
+			trained[number].append((word, freq))
+		else:
+			trained[number] = [(word, freq)]
+
+	with open('training/monogram_words.json', 'w') as fp:
+		json.dump(trained, fp)
 
 
-def strip_accents(s):
-   return ''.join(c for c in unicodedata.normalize('NFD', s)
-                  if unicodedata.category(c) != 'Mn')
 
-s = codecs.open('corpus/corpus_sm.txt', 'r', encoding='utf-8').read().lower();
+def predict_word(number):
+	if(not os.path.isfile('training/monogram_words.json')):
+		train()
+		
+	data = {}
+	with open('training/monogram_words.json') as training_data:    
+		data = json.load(training_data)
 
+	if not number in data:
+		return None
 
-"""words = re.findall(r'\b\w+\b', open('corpus/corpus_sm.txt').read().lower())
-counter = Counter(words);
+	possibilities = data[number];
 
-pprint(counter.most_common(100));"""
+	result = max(possibilities, key=lambda tuple: tuple[1])
 
-print(strip_accents(s))
+	return result[0]
+
+def main(text):
+	prediction = ""
+
+	for word in words:
+		number = functions.word_to_number(word)
+
+		prediction += predict_word(number) + " "
+
+	print(prediction)
+
+if __name__ == '__main__':
+	main("")
