@@ -35,7 +35,7 @@ def train():
 def predict_word(number):
 	if(not os.path.isfile('training/monogram_words.json')):
 		train()
-		
+
 	data = {}
 	with open('training/monogram_words.json') as training_data:    
 		data = json.load(training_data)
@@ -49,7 +49,7 @@ def predict_word(number):
 
 	return result[0]
 
-def main(text):
+def run(text):
 	prediction = ""
 
 	for word in words:
@@ -58,6 +58,3 @@ def main(text):
 		prediction += predict_word(number) + " "
 
 	print(prediction)
-
-if __name__ == '__main__':
-	main("")

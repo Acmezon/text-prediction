@@ -18,6 +18,7 @@ def train():
 	trained = {}
 
 	for i in range(0, len(words)):
+		print("")
 		for j in range(i, len(words)):
 			print(str(j + len(words) * i) + "/" + str(len(words) * len(words)), end="\r")
 
