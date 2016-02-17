@@ -3,6 +3,16 @@
 
 import json, re, string, os.path;
 
+mapping_letters = {
+	2:["a", "b", "c"],
+	3:["d", "e", "f"],
+	4:["g", "h", "i"],
+	5:["j", "k", "l"],
+	6:["m", "n", "o"],
+	7:["p", "q", "r", "s"],
+	8:["t", "u", "v"],
+	9:["w", "x", "y", "z"]};
+
 ## Runs the letter prediction
 def run():
 	train();
@@ -59,16 +69,6 @@ def train():
 ## Returns most probable letter for a dial number.
 def predict_letter(dial):
 
-	mapping_letters = {
-		2:["a", "b", "c"],
-		3:["d", "e", "f"],
-		4:["g", "h", "i"],
-		5:["j", "k", "l"],
-		6:["m", "n", "o"],
-		7:["p", "q", "r", "s"],
-		8:["t", "u", "v"],
-		9:["w", "x", "y", "z"]};
-
 	with open(letter_monograms) as data_file:
 		ocurrences = json.load(data_file);
 
@@ -82,15 +82,6 @@ def predict_letter(dial):
 
 ## Returns most probable letter for a dial number with previous dial.
 def predict_letters(first_letter, second_number):
-	mapping_letters = {
-		2:["a", "b", "c"],
-		3:["d", "e", "f"],
-		4:["g", "h", "i"],
-		5:["j", "k", "l"],
-		6:["m", "n", "o"],
-		7:["p", "q", "r", "s"],
-		8:["t", "u", "v"],
-		9:["w", "x", "y", "z"]};
 
 	with open(letter_bigrams) as data_file:
 		ocurrences = json.load(data_file);
