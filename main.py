@@ -51,10 +51,11 @@ def getFile(textvar):
 
 	textvar.set(name)
 
-def train_model(parent, corpus):
+def train_model(corpus):
 	train.train(corpus.get())
 
 	load_files()
+	messagebox.showinfo('Entrenamiento', 'Entrenamiento finalizado correctamente.')	
 
 def predict(predicted, number):
 	if not trained:
@@ -67,11 +68,19 @@ def predict(predicted, number):
 	if number == '0':
 		code += ' '
 		predicted_so_far += ' '
+	elif number == '':
+		predicted_so_far = word_prediction.run(code, unigram_letters, bigram_letters, unigram_words, bigram_words)
 	else:
 		code += number
 		predicted_so_far = word_prediction.run(code, unigram_letters, bigram_letters, unigram_words, bigram_words)
 
 	predicted.set(predicted_so_far)
+
+def delete(predicted):
+	global code
+
+	code = code[:-1]
+	predict(predicted, '')
 
 	
 root = tk.Tk()
@@ -95,9 +104,10 @@ tabs = ttk.Notebook(root)
 prediction = tk.Frame(tabs, background='white')
 predicted = tk.StringVar()
 
-entry_predicted = tk.Entry(prediction, textvariable=predicted, disabledbackground='white', disabledforeground='black', font="Calibri 15", borderwidth=0, highlightbackground='white')
-entry_predicted.config(state='disabled')
-entry_predicted.grid(row=0, column=0, ipady=40, ipadx=95, columnspan=3)
+entry_predicted = tk.Label(prediction, textvariable=predicted, background='white', foreground='black', font="Calibri 15", borderwidth=0, highlightbackground='white', justify=tk.LEFT, wraplength=270)
+entry_predicted.grid(row=0, column=0, ipady=40, columnspan=2)
+tk.Button(prediction, bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0, text='Borrar', command=lambda: delete(predicted), width=15, height=8).grid(row=0, column=2)
+
 
 tk.Button(prediction, bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0, text='1', width=15, height=8).grid(row=1, column=0, padx=1, pady=1)
 tk.Button(prediction, bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0, command=lambda: predict(predicted, '2'), text='a b c\n2', width=15, height=8).grid(row=1, column=1, padx=1, pady=1)
@@ -123,7 +133,7 @@ corpus.grid(row=0, column=0, padx=10, pady=10, ipady=5)
 
 tk.Button(training, text='Corpus (opcional)', command= lambda: getFile(filename), bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0,).grid(row=0, column=1, padx=10, pady=10, ipady=2)
 
-tk.Button(training, text='Entrenar', command= lambda: train_model(training, corpus), bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0,).grid(row=1, column=0, sticky='w', padx=10)
+tk.Button(training, text='Entrenar', command= lambda: train_model(corpus), bg='white', highlightbackground='black', activebackground='#cceeff', borderwidth=0,).grid(row=1, column=0, sticky='w', padx=10)
 
 
 tabs.add(prediction, text = "Predicción")
