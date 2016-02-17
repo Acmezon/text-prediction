@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
+import math
 import unicodedata
+
+from collections import Counter
 
 def strip_accents(s):
 	return ''.join(c for c in unicodedata.normalize('NFKD', s)
@@ -64,3 +67,26 @@ def sentence_to_numbers(sentence):
 	for word in ' '.join(sentence.split()).split():
 		out += word_to_number(word) + " "
 	return out
+
+def get_cosine(vec1, vec2):
+	intersection = set(vec1.keys()) & set(vec2.keys())
+	numerator = sum([vec1[x] * vec2[x] for x in intersection])
+
+	sum1 = sum([vec1[x]**2 for x in vec1.keys()])
+	sum2 = sum([vec2[x]**2 for x in vec2.keys()])
+	denominator = math.sqrt(sum1) * math.sqrt(sum2)
+
+	if not denominator:
+		return 0.0
+	else:
+		return float(numerator) / denominator
+
+def text_to_vector(text):
+	word = re.compile(r'\w+')
+	words = word.findall(text)
+	return Counter(words)
+
+def word_to_vector(word):
+	char = re.compile(r'\w')
+	chars = char.findall(word)
+	return Counter(chars)
