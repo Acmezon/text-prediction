@@ -27,17 +27,17 @@ def train():
 		else:
 			trained[number] = [(word, freq)]
 
-	with open('training/monogram_words.json', 'w') as fp:
+	with open('training/unigram_words.json', 'w') as fp:
 		json.dump(trained, fp)
 
 
 
 def predict_word(number):
-	if(not os.path.isfile('training/monogram_words.json')):
+	if(not os.path.isfile('training/unigram_words.json')):
 		train()
 
 	data = {}
-	with open('training/monogram_words.json') as training_data:    
+	with open('training/unigram_words.json') as training_data:    
 		data = json.load(training_data)
 
 	if not number in data:
