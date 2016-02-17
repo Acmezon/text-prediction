@@ -1,39 +1,55 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import letter_prediction, word_prediction, functions, json;
-from train import train;
+import functions, json, re, string, train, os.path;
 
-def main():
-	## asdasdasd
-	number = functions.sentence_to_numbers("tenemos tomates al ajillo con patatas y coresterol");
-	print(number)
+from tkinter import *
+from tkinter import filedialog
+from ttk import *
 
-	train();
+def getFile(textvar):
+	options = { 'multiple': False, 'filetypes': [('Texto', '.txt')] }
+	name = filedialog.askopenfilename(**options)
 
-	## Charge 
-	unigram_letters_filename = 'training/unigram_letter.json'
-	bigram_letters_filename = 'training/bigram_letter.json'
+	textvar.set(name)
 
-	unigram_words_filename = 'training/unigram_words.json'
-	bigram_words_filename = 'training/bigram_words.json'
-
-	with open(unigram_letters_filename) as data_file:
-		unigram_letters = json.load(data_file)
-
-	with open(bigram_letters_filename) as data_file:
-		bigram_letters = json.load(data_file)
-
-	with open(unigram_words_filename) as data_file:
-		unigram_words = json.load(data_file)
-
-	with open(bigram_words_filename) as data_file:
-		bigram_words = json.load(data_file)
+def train_model(parent, corpus):
+	trained = train.train(corpus.get())
 
 
+	
+root = Tk()
+root.title('Predictor de texto')
+
+tabs = Notebook(root)
+
+prediction = Frame(tabs)
+Button(prediction, text='1').grid(row=0, column=0)
+Button(prediction, text='2').grid(row=0, column=1)
+Button(prediction, text='3').grid(row=0, column=2)
+
+Button(prediction, text='4').grid(row=1, column=0)
+Button(prediction, text='5').grid(row=1, column=1)
+Button(prediction, text='6').grid(row=1, column=2)
+
+Button(prediction, text='7').grid(row=2, column=0)
+Button(prediction, text='8').grid(row=2, column=1)
+Button(prediction, text='9').grid(row=2, column=2)
+
+training = Frame(tabs)
+
+filename = StringVar()
+corpus = Entry(training, textvariable=filename)
+corpus.config(state=DISABLED)
+corpus.pack(side=LEFT, padx=10, pady=10)
+Button(training, text='Corpus (opcional)', command= lambda: getFile(filename)).pack(side=LEFT, padx=10, pady=10)
+
+Button(training, text='Entrenar', command= lambda: train_model(training, corpus)).pack(side=RIGHT, padx=10, pady=10)
 
 
-	print(word_prediction.run(number, unigram_letters, bigram_letters, unigram_words, bigram_words));
+tabs.add(prediction, text = "Predicción")
+tabs.add(training, text = "Entrenamiento")
+tabs.pack()
 
-if __name__=='__main__':
-	main();
+Button(master = root, text='Exit', command = lambda: exit()).pack(side = LEFT)
+mainloop()

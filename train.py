@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import codecs
 import functions
 import json
@@ -10,9 +11,8 @@ import unicodedata
 from collections import Counter
 from functions import word_to_number
 
-def train():
+def train(filename):
 	start_time = time.time()
-	filename = 'corpus/corpus_sm.txt'
 
 	unigram_letters = 'training/unigram_letter.json'
 	bigram_letters = 'training/bigram_letter.json'
@@ -20,6 +20,28 @@ def train():
 	unigram_words = 'training/unigram_words.json'
 	bigram_words = 'training/bigram_words.json'
 
+	if filename:
+		try:
+			os.remove(unigram_letters)
+		except OSError:
+			pass
+
+		try:
+			os.remove(bigram_letters)
+		except OSError:
+			pass
+
+		try:
+			os.remove(unigram_words)
+		except OSError:
+			pass
+
+		try:
+			os.remove(bigram_words)
+		except OSError:
+			pass
+	else:
+		filename = 'corpus/corpus_sm.txt'
 
 	s = functions.strip_accents(codecs.open(filename, 'r', encoding='utf-8').read().lower());
 	words = re.findall(r'\b[a-z]+\b', s)
@@ -34,7 +56,7 @@ def train():
 	letters_count = Counter(letters)
 	bi_letters_count = Counter(bi_letters)
 
-	print("Counters took {0} seconds".format(time.time() - start_time))
+	print("Counters took {0:.2f} seconds".format(time.time() - start_time))
 
 	print("---------Training begins")
 
@@ -65,7 +87,7 @@ def train():
 	else:
 		print("---------Bigram letters already trained")
 
-	print("---------Trainig finished: it tooks {0} seconds".format(time.time() - start_time))
+	print("---------Trainig finished: it tooks {0:.2f} seconds".format(time.time() - start_time))
 
 def train_unigram_letters(letters_count, out_filename):
 	unigram_letters_trained = dict(letters_count)
@@ -156,7 +178,7 @@ def train_bigram_words(bi_words_count, out_filename):
 	with open(out_filename, 'w') as fp:
 		json.dump(bigram_words_trained, fp)
 
-	return
+	return 1
 
 if __name__ == "__main__":
 	train()
