@@ -5,12 +5,14 @@ import re
 import unicodedata
 from collections import Counter
 
-filename = 'corpus/corpus_sm.txt';
+corpus_url = 'corpus/corpus_sm.txt';
 unigram_letters = 'training/unigram_letter.json';
-bigram_letters = 'training/bigram_letter.json'
+bigram_letters = 'training/bigram_letter.json';
+unigram_words = 'training/unigram_words.json';
+bigram_words = 'training/bigram_words.json';
 
 def train():
-	s = functions.strip_accents(codecs.open('corpus/corpus_sm.txt', 'r', encoding='utf-8').read().lower());
+	s = functions.strip_accents(codecs.open(corpus_url, 'r', encoding='utf-8').read().lower());
 	words = re.findall(r'\b[a-z]+\b', s)
 	letters = re.findall(r'[a-z]', s)
 
@@ -31,7 +33,7 @@ def train():
 		else:
 			unigram_words_trained[number] = [(word, freq)]
 
-	with open('training/unigram_words.json', 'w') as fp:
+	with open(unigram_words, 'w') as fp:
 		json.dump(unigram_words_trained, fp)
 
 	print("---------Unigram words trained")
