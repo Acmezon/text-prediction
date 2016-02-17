@@ -41,11 +41,11 @@ def word_to_number(word):
 
 	word = ''.join(e for e in word if e.isalnum())
 	word = re.sub(r'[0-9]', '', word);
-	word.replace('á', 'a');
-	word.replace('é', 'e');
-	word.replace('í', 'i');
-	word.replace('ó', 'o');
-	word.replace('ú', 'u');
+	word = word.replace('á', 'a');
+	word = word.replace('é', 'e');
+	word = word.replace('í', 'i');
+	word = word.replace('ó', 'o');
+	word = word.replace('ú', 'u');
 	word = word.lower();
 
 	for i in range (0, len(word)):
@@ -57,3 +57,9 @@ def word_to_number(word):
 			print('Character ' + character + ' not recognised');
 
 	return number;
+
+def sentence_to_numbers(sentence):
+	out = ""
+	for word in ' '.join(sentence.split()).split():
+		out += word_to_number(word) + " "
+	return out

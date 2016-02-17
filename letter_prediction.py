@@ -14,12 +14,8 @@ mapping_letters = {
 	8:["t", "u", "v"],
 	9:["w", "x", "y", "z"]};
 
-unigram_letters = 'training/unigram_letter.json';
-bigram_letters = 'training/bigram_letter.json';
-
 ## Runs the letter prediction
-def run(codes):
-	train()
+def run(codes, unigram_letters, bigram_letters):
 	out = "";
 	for code in codes.split():
 		out += predict_word(code) + " ";
@@ -27,7 +23,7 @@ def run(codes):
 	return out
 
 ## Returns most probable word for a single code
-def predict_word(code):
+def predict_word(code, unigram_letters, bigram_letters):
 	new_word = "";
 	previous_letter = None;
 
@@ -36,9 +32,9 @@ def predict_word(code):
 		number = int(code[i]);
 		if i == 0:
 			# if first character of word
-			letter = unigram_letter(number);
+			letter = unigram_letter(number, unigram_letters);
 		else:
-			letter = bigram_letter(previous_letter, number)[1];
+			letter = bigram_letter(previous_letter, number, unigram_letters, bigram_letters)[1];
 		previous_letter = letter;
 		new_word += letter;
 	
@@ -46,35 +42,27 @@ def predict_word(code):
 
 
 ## Returns most probable letter for a dial number.
-def unigram_letter(number):
-
-	with open(unigram_letters) as data_file:
-		ocurrences = json.load(data_file);
-
+def unigram_letter(number, unigram_letters):
 	candidates = mapping_letters[number];
 
 	max = random.choice(candidates);
 	for candidate in candidates:
-		if ocurrences[candidate] > ocurrences[max]:
+		if unigram_letters[candidate] > unigram_letters[max]:
 			max = candidate;
 	return max;
 
 ## Returns most probable letter for a dial number with previous letter defined.
-def bigram_letter(first_letter, second_number):
-
-	with open(bigram_letters) as data_file:
-		ocurrences = json.load(data_file);
-
+def bigram_letter(first_letter, second_number, unigram_letters, bigram_letters):
 	key = first_letter + str(second_number);
-	if key in ocurrences.keys():
-		candidates = ocurrences[key];
+	if key in bigram_letters:
+		candidates = bigram_letters[key];
 		max_candidate = random.choice(candidates);
 		for tuple in candidates:
 			if tuple[1] > max_candidate[1]:
 				max_candidate = tuple;
 		return max_candidate[0];
 	else:
-		return first_letter + unigram_letter(second_number);
+		return first_letter + unigram_letter(second_number, unigram_letters);
 	
 
 	

@@ -23,7 +23,7 @@ def train():
 
 	s = functions.strip_accents(codecs.open(filename, 'r', encoding='utf-8').read().lower());
 	words = re.findall(r'\b[a-z]+\b', s)
-	bi_words = re.findall(r'(?=(\S+\s+\S+))\S+\s+', s)
+	bi_words = re.findall(r'(?=([a-z]+\s+[a-z]+))[a-z]+\s+', s)
 	
 	letters = re.findall(r'[a-z]', s)
 	bi_letters = re.findall(r'(?=([a-z][a-z]))[a-z]', s)
