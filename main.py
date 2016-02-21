@@ -41,7 +41,7 @@ def load_files():
 			bigram_words = json.load(data_file)
 
 		trained = True
-	except OSError:
+	except Exception:
 		trained = False
 		messagebox.showinfo('Entrenamiento', 'El modelo no está entrenado, no predecirá nada hasta que no se vaya a la pestaña entrenamiento y se entrene.')
 
